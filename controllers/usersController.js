@@ -1,29 +1,32 @@
 const { MongoClient } = require("../config/database.js");
+const { ObjectId } = require('mongodb');
 
-const { ObjectId } = require("mongodb");
 
 const userColl = MongoClient.db("shadamon").collection("users");
 
 async function getUsers(req, res) {
   try {
-    const email = req.query.email;
+    const id = req.query.id;
     const query = {};
-    if (email) query.email = email;
+    if (id) query._id = new ObjectId(id);
 
     const result = await userColl.find(query).toArray();
     return res.status(200).send({ data: result, message: "Users loaded successfully!" });
   } catch (error) {
-    return res.status(500).send({ message: "Failed to load users!" });
+    console.log(error); // Log the error for debugging purposes
+    return res.status(500).send({error: error, message: "Failed to load users!" });
   }
 }
+
+
 
 async function addUser(req, res) {
   try {
     const user = req.body;
 
-    const exist = await userColl.findOne(user.phone);
-    if (exist)
-      return res.status(402).send({ message: "This number already registered!" });
+    // const exist = await userColl.findOne(user.username);
+    // if (exist)
+    //   return res.status(402).send({ message: "This number already registered!" });
     const result = await userColl.insertOne(user);
     return res.status(200).send({ data: result, message: "User created successfully!" });
   } catch (error) {
@@ -41,7 +44,7 @@ async function deleteUser(req, res) {
     res.status(200).send({ data: result, message: "Successfully deleted user!" });
   } catch (error) {
     console.log(error);
-    res.status(500).send({ message: "Failed to delete the user!" });
+    res.status(500).send({error: error, message: "Failed to delete the user!" });
   }
 }
 

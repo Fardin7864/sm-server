@@ -5,6 +5,7 @@ const corsMiddleware = require("./middleware/cors");
 const jsonParserMiddleware = require("./middleware/jsonParser");
 const cookieParserMiddleware = require("./middleware/cookieParser");
 const usersRoutes = require("./routes/users");
+const categoryRoutes = require("./routes/category")
 require("dotenv").config();
 
 const port = process.env.PORT || 5000;
@@ -16,8 +17,13 @@ app.use(cookieParserMiddleware);
 
 // Routes
 app.use("/api/v1/users", usersRoutes);
+app.use("/api/v1/categorys", categoryRoutes);
 
 // Start server
+app.get("/",async (req,res) => { 
+    console.log("server is running");
+    res.send("Server is running well")
+ })
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
