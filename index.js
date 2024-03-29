@@ -6,6 +6,11 @@ const jsonParserMiddleware = require("./middleware/jsonParser");
 const cookieParserMiddleware = require("./middleware/cookieParser");
 const usersRoutes = require("./routes/users");
 const categoryRoutes = require("./routes/category")
+const postRoutes = require("./routes/post")
+const locationRoutes = require("./routes/location")
+const promoteRoutes = require("./controllers/promotionController")
+const reportRoutes = require("./controllers/reportController")
+const notificationRoutes = require("./controllers/notificationController")
 require("dotenv").config();
 
 const port = process.env.PORT || 5000;
@@ -18,6 +23,11 @@ app.use(cookieParserMiddleware);
 // Routes
 app.use("/api/v1/users", usersRoutes);
 app.use("/api/v1/categorys", categoryRoutes);
+app.use("/api/v1/posts", postRoutes );
+app.use("/api/v1/locations", locationRoutes );
+app.use("/api/v1/promotes", promoteRoutes );
+app.use("/api/v1/reports", reportRoutes );
+app.use("/api/v1/notifications", notificationRoutes );
 
 // Start server
 app.get("/",async (req,res) => { 
