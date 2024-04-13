@@ -8,9 +8,10 @@ const usersRoutes = require("./routes/users");
 const categoryRoutes = require("./routes/category")
 const postRoutes = require("./routes/post")
 const locationRoutes = require("./routes/location")
-const promoteRoutes = require("./controllers/promotionController")
-const reportRoutes = require("./controllers/reportController")
-const notificationRoutes = require("./controllers/notificationController")
+const promoteRoutes = require("./routes/promotionRoutes")
+const reportRoutes = require("./routes/reportRoutes")
+const notificationRoutes = require("./routes/notificationRoutes")
+const chatRoutes = require("./routes/chat")
 require("dotenv").config();
 
 const port = process.env.PORT || 5000;
@@ -28,6 +29,7 @@ app.use("/api/v1/locations", locationRoutes );
 app.use("/api/v1/promotes", promoteRoutes );
 app.use("/api/v1/reports", reportRoutes );
 app.use("/api/v1/notifications", notificationRoutes );
+app.use("/api/v1/chats", chatRoutes );
 
 // Start server
 app.get("/",async (req,res) => { 

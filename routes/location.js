@@ -12,6 +12,6 @@ router.post('/', locationController.addLocation);
 router.delete('/:id', locationController.deleteLocation);
 
 // Update a location by ID
-router.put('/:id', locationController.updateLocation);
+router.patch('/update/:id', locationController.updateLocation);
 
 module.exports = router;
