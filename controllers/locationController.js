@@ -3,7 +3,7 @@ const { ObjectId } = require('mongodb');
 
 const locationColl = MongoClient.db("shadamon").collection("locations");
 
-async function getLocations(req, res) {
+async function getLocations(req, res, next) {
   try {
     const id = req.query.id;
     const query = {};
@@ -13,10 +13,12 @@ async function getLocations(req, res) {
   } catch (error) {
     console.log(error);
     return res.status(500).send({ error: error, message: "Failed to load locations!" });
+  }finally{
+    next();
   }
 }
 
-async function addLocation(req, res) {
+async function addLocation(req, res, next) {
   try {
     const location = req.body;
     const result = await locationColl.insertOne(location);
@@ -24,10 +26,12 @@ async function addLocation(req, res) {
   } catch (error) {
     console.log(error);
     return res.status(500).send({ message: "Failed to create location" });
+  }finally{
+    next();
   }
 }
 
-async function deleteLocation(req, res) {
+async function deleteLocation(req, res, next) {
   try {
     const id = req.params.id;
     const result = await locationColl.findOneAndDelete({
@@ -37,10 +41,12 @@ async function deleteLocation(req, res) {
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error, message: "Failed to delete the location!" });
+  }finally{
+    next();
   }
 }
 
-async function updateLocation(req, res) {
+async function updateLocation(req, res, next) {
   try {
     const id = req.params.id;
     const query = { _id: new ObjectId(id) };
@@ -54,6 +60,8 @@ async function updateLocation(req, res) {
   } catch (error) {
     console.log(error)
     res.status(500).send({ message: "Failed to update location" })
+  }finally{
+    next();
   }
 }
 

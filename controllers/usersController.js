@@ -4,7 +4,7 @@ const { ObjectId } = require('mongodb');
 
 const userColl = MongoClient.db("shadamon").collection("users");
 
-async function getUsers(req, res) {
+async function getUsers(req, res,next) {
   try {
     const id = req.query.id;
     const query = {};
@@ -15,12 +15,14 @@ async function getUsers(req, res) {
   } catch (error) {
     console.log(error); // Log the error for debugging purposes
     return res.status(500).send({error: error, message: "Failed to load users!" });
+  }finally{
+    next();
   }
 }
 
 
 
-async function addUser(req, res) {
+async function addUser(req, res,next) {
   try {
     const user = req.body;
 
@@ -32,10 +34,12 @@ async function addUser(req, res) {
   } catch (error) {
     console.log(error);
     return res.status(500).send({ message: "Failed to create user" });
+  }finally{
+    next();
   }
 }
 
-async function deleteUser(req, res) {
+async function deleteUser(req, res,next) {
   try {
     const id = req.params.id;
     const result = await userColl.findOneAndDelete({
@@ -45,10 +49,12 @@ async function deleteUser(req, res) {
   } catch (error) {
     console.log(error);
     res.status(500).send({error: error, message: "Failed to delete the user!" });
+  }finally{
+    next();
   }
 }
 
-async function updateUser(req, res) {
+async function updateUser(req, res,next) {
   try {
     const id = req.params.id;
     const query = { _id: new ObjectId(id) }
@@ -62,6 +68,8 @@ async function updateUser(req, res) {
   } catch (error) {
     console.log(error)
     res.status(500).send({ message: "Failed to update user" })
+  }finally{
+    next();
   }
 }
 

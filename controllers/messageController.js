@@ -4,7 +4,7 @@ const { ObjectId } = require('mongodb');
 const chatColl = MongoClient.db("shadamon").collection("messages");
 
 
-async function getMessages(req, res) {
+async function getMessages(req, res, next) {
     try {
       const reciverId = req.query.reciverId;
       const userId = req.params.id;
@@ -16,16 +16,20 @@ async function getMessages(req, res) {
     } catch (error) {
       console.log(error);
       return res.status(500).send({ error: error, message: "Failed to load posts!" });
+    }finally{
+      next();
     }
   }
   
-async function postMessage (req,res) { 
+async function postMessage (req,res, next) { 
     try {
         const message = req.body;
         const result = await chatColl.insertOne(message);
         res.status(200).send({ data: result, message: "Successfully send message!" });
     } catch (error) {
         return res.status(500).send({ error: error, message: "Failed to Post message!" });
+    }finally{
+      next();
     }
  }
 

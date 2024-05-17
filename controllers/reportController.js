@@ -3,7 +3,7 @@ const { ObjectId } = require('mongodb');
 
 const reportColl = MongoClient.db("shadamon").collection("reports");
 
-async function getReports(req, res) {
+async function getReports(req, res, next) {
   try {
     const id = req.query.id;
     const query = {};
@@ -13,10 +13,12 @@ async function getReports(req, res) {
   } catch (error) {
     console.log(error);
     return res.status(500).send({ error: error, message: "Failed to load reports!" });
+  }finally{
+    next();
   }
 }
 
-async function addReport(req, res) {
+async function addReport(req, res, next) {
   try {
     const report = req.body;
     const result = await reportColl.insertOne(report);
@@ -24,10 +26,12 @@ async function addReport(req, res) {
   } catch (error) {
     console.log(error);
     return res.status(500).send({ message: "Failed to create report" });
+  }finally{
+    next();
   }
 }
 
-async function deleteReport(req, res) {
+async function deleteReport(req, res, next) {
   try {
     const id = req.params.id;
     const result = await reportColl.findOneAndDelete({
@@ -37,10 +41,12 @@ async function deleteReport(req, res) {
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error, message: "Failed to delete the report!" });
+  }finally{
+    next();
   }
 }
 
-async function updateReport(req, res) {
+async function updateReport(req, res, next) {
   try {
     const id = req.params.id;
     const query = { _id: new ObjectId(id) };
@@ -54,6 +60,8 @@ async function updateReport(req, res) {
   } catch (error) {
     console.log(error)
     res.status(500).send({ message: "Failed to update report" })
+  }finally{
+    next();
   }
 }
 

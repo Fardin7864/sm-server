@@ -3,7 +3,7 @@ const { ObjectId } = require('mongodb');
 
 const promotionColl = MongoClient.db("shadamon").collection("promotions");
 
-async function getPromotions(req, res) {
+async function getPromotions(req, res, next) {
   try {
     const id = req.query.id;
     const query = {};
@@ -13,10 +13,12 @@ async function getPromotions(req, res) {
   } catch (error) {
     console.log(error);
     return res.status(500).send({ error: error, message: "Failed to load promotions!" });
+  }finally{
+    next();
   }
 }
 
-async function addPromotion(req, res) {
+async function addPromotion(req, res, next) {
   try {
     const promotion = req.body;
     const result = await promotionColl.insertOne(promotion);
@@ -24,10 +26,12 @@ async function addPromotion(req, res) {
   } catch (error) {
     console.log(error);
     return res.status(500).send({ message: "Failed to create promotion" });
+  }finally{
+    next();
   }
 }
 
-async function deletePromotion(req, res) {
+async function deletePromotion(req, res, next) {
   try {
     const id = req.params.id;
     const result = await promotionColl.findOneAndDelete({
@@ -37,10 +41,12 @@ async function deletePromotion(req, res) {
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error, message: "Failed to delete the promotion!" });
+  }finally{
+    next();
   }
 }
 
-async function updatePromotion(req, res) {
+async function updatePromotion(req, res, next) {
   try {
     const id = req.params.id;
     const query = { _id: new ObjectId(id) };
@@ -54,6 +60,8 @@ async function updatePromotion(req, res) {
   } catch (error) {
     console.log(error)
     res.status(500).send({ message: "Failed to update promotion" })
+  }finally{
+    next();
   }
 }
 

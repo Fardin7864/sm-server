@@ -3,7 +3,7 @@ const { ObjectId } = require('mongodb');
 
 const notificationColl = MongoClient.db("shadamon").collection("notifications");
 
-async function getNotifications(req, res) {
+async function getNotifications(req, res, next) {
   try {
     const id = req.query.id;
     const query = {};
@@ -13,10 +13,12 @@ async function getNotifications(req, res) {
   } catch (error) {
     console.log(error);
     return res.status(500).send({ error: error, message: "Failed to load notifications!" });
+  }finally{
+    next();
   }
 }
 
-async function addNotification(req, res) {
+async function addNotification(req, res, next) {
   try {
     const notification = req.body;
     const result = await notificationColl.insertOne(notification);
@@ -24,10 +26,12 @@ async function addNotification(req, res) {
   } catch (error) {
     console.log(error);
     return res.status(500).send({ message: "Failed to create notification" });
+  }finally{
+    next();
   }
 }
 
-async function deleteNotification(req, res) {
+async function deleteNotification(req, res, next) {
   try {
     const id = req.params.id;
     const result = await notificationColl.findOneAndDelete({
@@ -37,10 +41,12 @@ async function deleteNotification(req, res) {
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error, message: "Failed to delete the notification!" });
+  }finally{
+    next();
   }
 }
 
-async function updateNotification(req, res) {
+async function updateNotification(req, res, next) {
   try {
     const id = req.params.id;
     const query = { _id: new ObjectId(id) };
@@ -54,6 +60,8 @@ async function updateNotification(req, res) {
   } catch (error) {
     console.log(error)
     res.status(500).send({ message: "Failed to update notification" })
+  }finally{
+    next();
   }
 }
 

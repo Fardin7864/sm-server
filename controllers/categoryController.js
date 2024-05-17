@@ -3,7 +3,7 @@ const { ObjectId } = require('mongodb');
 
 const categoryColl = MongoClient.db("shadamon").collection("categories");
 
-async function getCategories(req, res) {
+async function getCategories(req, res, next) {
   try {
     const id = req.query.id;
     const query = {};
@@ -13,10 +13,12 @@ async function getCategories(req, res) {
   } catch (error) {
     console.log(error);
     return res.status(500).send({ error: error, message: "Failed to load categories!" });
+  }finally{
+    next();
   }
 }
 
-async function addCategory(req, res) {
+async function addCategory(req, res, next) {
   try {
     const category = req.body;
     const result = await categoryColl.insertOne(category);
@@ -24,10 +26,12 @@ async function addCategory(req, res) {
   } catch (error) {
     console.log(error);
     return res.status(500).send({ message: "Failed to create category" });
+  }finally{
+    next();
   }
 }
 
-async function deleteCategory(req, res) {
+async function deleteCategory(req, res, next) {
   try {
     const id = req.params.id;
     const result = await categoryColl.findOneAndDelete({
@@ -37,10 +41,12 @@ async function deleteCategory(req, res) {
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error, message: "Failed to delete the category!" });
+  }finally{
+    next();
   }
 }
 
-async function updateCategory(req, res) {
+async function updateCategory(req, res, next) {
   try {
     const id = req.params.id;
     const query = { _id: new ObjectId(id) };
@@ -54,6 +60,9 @@ async function updateCategory(req, res) {
   } catch (error) {
     console.log(error)
     res.status(500).send({ message: "Failed to update category" })
+  }
+  finally{
+    next();
   }
 }
 
